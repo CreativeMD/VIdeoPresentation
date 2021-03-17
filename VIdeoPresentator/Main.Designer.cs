@@ -44,6 +44,8 @@ namespace VIdeoPresentator
             this.vlcView.Name = "vlcView";
             this.vlcView.Size = new System.Drawing.Size(841, 531);
             this.vlcView.TabIndex = 0;
+            this.vlcView.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Main_KeyPress);
+            this.vlcView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.vlcView_MouseDoubleClick);
             // 
             // open
             // 
@@ -54,6 +56,7 @@ namespace VIdeoPresentator
             this.open.Text = "Open Presentation";
             this.open.UseVisualStyleBackColor = true;
             this.open.Click += new System.EventHandler(this.open_Click);
+            this.open.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Main_KeyPress);
             // 
             // openpresentation
             // 
@@ -69,6 +72,7 @@ namespace VIdeoPresentator
             this.Controls.Add(this.vlcView);
             this.Name = "Main";
             this.Text = "Presentation";
+            this.Shown += new System.EventHandler(this.Main_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.vlcView)).EndInit();
             this.ResumeLayout(false);
 

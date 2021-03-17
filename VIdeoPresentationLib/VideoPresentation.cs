@@ -15,6 +15,8 @@ namespace VideoPresentationLib
         public bool HasFile { get; private set; }
         public bool Modified { get; private set; }
 
+        private int currentIndex = -1;
+
         public List<VideoPresentationEvent> Entries { get; private set; }
 
         public VideoPresentation()
@@ -28,6 +30,30 @@ namespace VideoPresentationLib
             this.FileName = filename;
             this.HasFile = true;
             this.loadFile();
+        }
+
+        public VideoPresentationEvent next()
+        {
+            int next = currentIndex + 1;
+            if (next < Entries.Count)
+            {
+                this.currentIndex = next;
+                return Entries[currentIndex];
+            }
+            else
+                return null;
+        }
+
+        public VideoPresentationEvent previous()
+        {
+            int previous = currentIndex - 1;
+            if (previous > 0)
+            {
+                this.currentIndex = previous;
+                return Entries[currentIndex];
+            }
+            else
+                return null;
         }
 
         public void setFilename(string filename)
