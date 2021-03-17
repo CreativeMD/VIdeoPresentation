@@ -3,14 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31105.61
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoPresentationLib", "VIdeoPresentationLib\VideoPresentationLib.csproj", "{59BB16FA-062B-4ED9-B633-3B8DD9FC9978}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VideoPresentationLib", "VIdeoPresentationLib\VideoPresentationLib.csproj", "{59BB16FA-062B-4ED9-B633-3B8DD9FC9978}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoPresentationMaker", "VideoPresentationMaker\VideoPresentationMaker.csproj", "{6309E436-682D-421E-BA08-261D96DF43F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VideoPresentationMaker", "VideoPresentationMaker\VideoPresentationMaker.csproj", "{6309E436-682D-421E-BA08-261D96DF43F9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{59BB16FA-062B-4ED9-B633-3B8DD9FC9978} = {59BB16FA-062B-4ED9-B633-3B8DD9FC9978}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoPresentator", "VIdeoPresentator\VideoPresentator.csproj", "{B1523B09-4D06-48BF-BA40-C99311BF4FEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VideoPresentator", "VIdeoPresentator\VideoPresentator.csproj", "{B1523B09-4D06-48BF-BA40-C99311BF4FEA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{59BB16FA-062B-4ED9-B633-3B8DD9FC9978} = {59BB16FA-062B-4ED9-B633-3B8DD9FC9978}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
