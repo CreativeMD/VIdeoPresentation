@@ -1,5 +1,5 @@
 ﻿
-namespace VIdeoPresentator
+namespace VideoPresentator
 {
     partial class Main
     {
@@ -32,6 +32,7 @@ namespace VIdeoPresentator
             this.vlcView = new LibVLCSharp.WinForms.VideoView();
             this.open = new System.Windows.Forms.Button();
             this.openpresentation = new System.Windows.Forms.OpenFileDialog();
+            this.labelPart = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.vlcView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,18 +64,33 @@ namespace VIdeoPresentator
             this.openpresentation.Filter = "Video Presentation|*.vpf";
             this.openpresentation.RestoreDirectory = true;
             // 
+            // labelPart
+            // 
+            this.labelPart.AutoSize = true;
+            this.labelPart.BackColor = System.Drawing.Color.Transparent;
+            this.labelPart.Location = new System.Drawing.Point(492, 407);
+            this.labelPart.Name = "labelPart";
+            this.labelPart.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.labelPart.Size = new System.Drawing.Size(0, 15);
+            this.labelPart.TabIndex = 2;
+            this.labelPart.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.labelPart.Visible = false;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(841, 531);
+            this.Controls.Add(this.labelPart);
             this.Controls.Add(this.open);
             this.Controls.Add(this.vlcView);
             this.Name = "Main";
             this.Text = "Presentation";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.Shown += new System.EventHandler(this.Main_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.vlcView)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -83,6 +99,7 @@ namespace VIdeoPresentator
         private LibVLCSharp.WinForms.VideoView vlcView;
         private System.Windows.Forms.Button open;
         private System.Windows.Forms.OpenFileDialog openpresentation;
+        private System.Windows.Forms.Label labelPart;
     }
 }
 

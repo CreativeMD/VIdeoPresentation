@@ -1,16 +1,18 @@
 ﻿using LibVLCSharp.Shared;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VideoPresentationLib;
 
-namespace VIdeoPresentator
+namespace VideoPresentator
 {
 
     public partial class Main : Form
@@ -20,6 +22,8 @@ namespace VIdeoPresentator
         public LibVLC lib;
         public bool fullscreen = false;
         public Rectangle beforeBounds;
+        public VideoPresentationPart part;
+        public WorkerThread worker = new WorkerThread();
 
         public Main()
         {
@@ -31,13 +35,23 @@ namespace VIdeoPresentator
             if (lib == null)
             {
                 Core.Initialize(@"C:\Program Files\VideoLAN\VLC");
-                lib = new LibVLC("--input-repeat=2");
+                lib = new LibVLC(""); // new LibVLC("--input-repeat=2");
                 player = new MediaPlayer(lib);
+                player.EndReached += Player_EndReached;
                 vlcView.MediaPlayer = player;
             }
             presentation = new VideoPresentation(filename);
             //loadEvent(presentation.start());
             open.Visible = false;
+        }
+
+        private void Player_EndReached(object sender, EventArgs e)
+        {
+            if (part != null && presentation != null)
+                if (part.Loop)
+                    worker.Queue(delegate { loadEvent(part); });
+                else if (!part.StopAtEnd)
+                    worker.Queue(delegate { loadEvent(presentation.next()); });
         }
 
         public void endPresentation()
@@ -60,16 +74,28 @@ namespace VIdeoPresentator
                 openPresentation(args[1]);
         }
 
-        public void loadEvent(VideoPresentationEvent evt)
+        public void loadEvent(VideoPresentationPart evt)
         {
-            if (evt is VideoEntry)
+
+            if (evt is VideoPart)
             {
-                VideoEntry entry = (VideoEntry)evt;
+                part = evt;
+                VideoPart entry = (VideoPart)evt;
                 Media media = new Media(lib, entry.Filename);
                 player.Play(media);
             }
             else
-                player.Stop();
+            {
+                part = null;
+                //player.Stop();
+            }
+            if (!InvokeRequired)
+                Invoke((MethodInvoker)delegate ()
+                {
+                    labelPart.Text = presentation.getCurrent() + "";
+                });
+
+
         }
 
         private void Main_KeyPress(object sender, KeyPressEventArgs e)
@@ -139,5 +165,46 @@ namespace VIdeoPresentator
         {
             toggleFullscreen();
         }
+
+        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            worker.stop();
+            worker = null;
+        }
+    }
+
+    public class WorkerThread
+    {
+        public bool active;
+        private ConcurrentQueue<Action> queue = new ConcurrentQueue<Action>();
+        private Thread thread;
+
+        public WorkerThread()
+        {
+            this.active = true;
+            thread = new Thread(new ThreadStart(delegate
+            {
+                while (active)
+                {
+                    if (queue.IsEmpty)
+                        Thread.Sleep(1);
+                    Action action;
+                    if (queue.TryDequeue(out action))
+                        action.Invoke();
+                }
+            }));
+            this.thread.Start();
+        }
+
+        public void Queue(Action action)
+        {
+            queue.Enqueue(action);
+        }
+
+        public void stop()
+        {
+            active = false;
+        }
+
     }
 }

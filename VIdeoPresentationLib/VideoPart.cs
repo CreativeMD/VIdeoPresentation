@@ -5,22 +5,26 @@ using System.Text;
 
 namespace VideoPresentationLib
 {
-    public class VideoEntry : VideoPresentationEvent
+    public class VideoPart : VideoPresentationPart
     {
+
+        public bool StopAtEnd { get; set; }
+
         public bool Loop { get; set; }
+
         public string Filename { get; private set; }
 
-        //protected List<BreakPoint> points = new List<BreakPoint>();
-
-        public VideoEntry(string filename)
+        public VideoPart(string filename)
         {
             this.Filename = filename;
+            this.StopAtEnd = true;
         }
 
-        public VideoEntry(JObject json)
+        public VideoPart(JObject json)
         {
             this.Filename = json.Value<string>("file");
             this.Loop = json.Value<bool>("loop");
+            this.StopAtEnd = json.Value<bool>("stop");
         }
 
         public JObject toJson()
@@ -28,6 +32,7 @@ namespace VideoPresentationLib
             JObject json = new JObject();
             json.Add("file", Filename);
             json.Add("loop", Loop);
+            json.Add("stop", StopAtEnd);
             return json;
         }
 

@@ -13,6 +13,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VIdeoPresentationLib\VideoPresentationLib.csproj" />
+    <ProjectReference Include="..\VIdeoPresentator\VideoPresentator.csproj">
+      <Private>true</Private>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

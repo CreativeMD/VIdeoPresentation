@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -52,7 +53,11 @@ namespace VideoPresentationMaker
 
         private void PresentateItem_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (hasPresentation() && tempPresentation.HasFile)
+            {
+                savePresentation(false);
+                Process process = Process.Start("VideoPresentator.exe", tempPresentation.FileName);
+            }
         }
 
         private void CloseItem_Click(object sender, EventArgs e)
@@ -141,7 +146,7 @@ namespace VideoPresentationMaker
             tempPresentation = presentation;
 
             foreach (var entry in presentation.Entries)
-                addEvent((VideoEntry)entry);
+                addEvent((VideoPart)entry);
             updateTitle();
             add_video.Enabled = true;
         }
@@ -152,7 +157,7 @@ namespace VideoPresentationMaker
                 tempPresentation.setModified();
         }
 
-        public void addEvent(VideoEntry entry)
+        public void addEvent(VideoPart entry)
         {
             Panel box = new Panel();
             box.BorderStyle = BorderStyle.FixedSingle;
@@ -172,6 +177,18 @@ namespace VideoPresentationMaker
                 entry.Loop = check.Checked;
             };
             box.Controls.Add(check);
+
+            CheckBox stop = new CheckBox();
+            stop.AutoSize = true;
+            stop.Text = "Stop at the end";
+            stop.Top = 60;
+            stop.Checked = entry.StopAtEnd;
+            stop.CheckedChanged += delegate
+            {
+                entry.StopAtEnd = stop.Checked;
+            };
+            box.Controls.Add(stop);
+
             Button remove = new Button();
             remove.Width = 20;
             remove.AutoSize = true;
@@ -193,7 +210,7 @@ namespace VideoPresentationMaker
             {
                 foreach (var item in addvideo.FileNames)
                 {
-                    VideoEntry entry = new VideoEntry(item);
+                    VideoPart entry = new VideoPart(item);
                     tempPresentation.Entries.Add(entry);
                     addEvent(entry);
                     markModified();
