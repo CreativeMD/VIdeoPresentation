@@ -17,12 +17,12 @@ namespace VideoPresentationLib
 
         private int currentIndex = -1;
 
-        public List<VideoPresentationEvent> Entries { get; private set; }
+        public List<VideoPresentationPart> Entries { get; private set; }
 
         public VideoPresentation()
         {
             this.HasFile = false;
-            this.Entries = new List<VideoPresentationEvent>();
+            this.Entries = new List<VideoPresentationPart>();
         }
 
         public VideoPresentation(string filename)
@@ -32,7 +32,12 @@ namespace VideoPresentationLib
             this.loadFile();
         }
 
-        public VideoPresentationEvent next()
+        public int getCurrent()
+        {
+            return currentIndex;
+        }
+
+        public VideoPresentationPart next()
         {
             int next = currentIndex + 1;
             if (next < Entries.Count)
@@ -44,10 +49,10 @@ namespace VideoPresentationLib
                 return null;
         }
 
-        public VideoPresentationEvent previous()
+        public VideoPresentationPart previous()
         {
             int previous = currentIndex - 1;
-            if (previous > 0)
+            if (previous >= 0)
             {
                 this.currentIndex = previous;
                 return Entries[currentIndex];
@@ -66,7 +71,7 @@ namespace VideoPresentationLib
         {
             if (!HasFile)
                 throw new Exception();
-            Entries = new List<VideoPresentationEvent>();
+            Entries = new List<VideoPresentationPart>();
             if (File.Exists(FileName))
             {
                 using (StreamReader r = new StreamReader(FileName))
@@ -80,7 +85,7 @@ namespace VideoPresentationLib
                             foreach (var item in (JArray)token)
                             {
                                 if (item.Type == JTokenType.Object)
-                                    Entries.Add(new VideoEntry((JObject)item));
+                                    Entries.Add(new VideoPart((JObject)item));
                             }
                         }
                     }
@@ -108,10 +113,14 @@ namespace VideoPresentationLib
 
     }
 
-    public interface VideoPresentationEvent
+    public interface VideoPresentationPart
     {
 
         public JObject toJson();
+
+        public bool StopAtEnd { get; }
+
+        public bool Loop { get; }
 
     }
 }
